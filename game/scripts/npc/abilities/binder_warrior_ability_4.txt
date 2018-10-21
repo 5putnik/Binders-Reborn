@@ -1,0 +1,128 @@
+// Rewrite of the Lifestealer Rage ability
+// Author: jacklarnes
+// Date: 07.04.2015.
+"binder_warrior_ability_4"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"                     "ability_datadriven"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+    "AbilityTextureName"            "ember_spirit_fire_remnant"
+    "MaxLevel"						"5"
+    "RequiredLevel"          		"4"
+    "LevelsBetweenUpgrades"  		"2"
+
+
+    "precache"
+    {
+        "soundfile"         "soundevents/game_sounds_heroes/game_sounds_life_stealer.vsndevts"
+        "particle"          "particles/units/heroes/hero_life_stealer/life_stealer_rage.vpcf"
+        "particle"          "particles/status_fx/status_effect_life_stealer_rage.vpcf"
+    }
+
+
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastPoint"              "0"
+    "AbilityCastRange"              "0"
+    
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "80"
+    
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "150"
+    
+    "AbilityDuration"               "60"
+    
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "hit_point_bonus"    	"200 400 700 1100 1600"
+        }
+        "02"
+        {
+            "var_type"              "FIELD_FLOAT"
+            "duration"              "60.0"
+        }
+        "03"
+        {
+        	"var_type"              "FIELD_INTEGER"
+            "damage_bonus"    		"10 30 60 100 150"
+        }
+        "04"
+        {
+        	"var_type"              "FIELD_INTEGER"
+            "defense_bonus"    		"5 10 15 20 25"
+        }
+    }
+
+    "OnSpellStart"
+    {
+        "FireSound"
+        {
+            "EffectName"    "Hero_LifeStealer.Rage"
+            "Target"        "CASTER"
+        }
+
+        "RunScript"
+        {
+            "ScriptFile"    "abilities/heroes/binder_warrior/binder_warrior_ability_4.lua"
+            "Function"      "rage_start"
+        }
+
+        "ApplyModifier"
+        {
+            "ModifierName"  "modifier_rage_ability"
+            "Target"        "CASTER"
+            "Duration"      "%duration"
+        }
+
+    }
+
+    "Modifiers"
+    {
+        "modifier_rage_ability"
+        {
+            "Passive"           "0"
+            "IsHidden"          "0"
+            "IsDebuff"          "0"
+
+            "StatusEffectName"         "particles/status_fx/status_effect_life_stealer_rage.vpcf"        
+            "StatusEffectPriority"  "10"
+    
+            "OnCreated"
+            {
+                "AttachEffect"
+                {
+                    "EffectName"        "particles/units/heroes/hero_life_stealer/life_stealer_rage.vpcf"
+                    "EffectAttachType"  "attach_hitloc"
+                    "Target"            "CASTER"
+                    "ControlPointEntities"
+                    {
+                        "CASTER"    "attach_hitloc"
+                        "CASTER"    "attach_hitloc"
+                        "CASTER"    "attach_hitloc"
+                    }
+                }
+            }
+    
+            "Properties"
+            {
+                "MODIFIER_PROPERTY_HEALTH_BONUS"				"%hit_point_bonus"
+                "MODIFIER_PROPERTY_PREATTACK_BONUS_DAMAGE"		"%damage_bonus"
+                "MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS"		"%defense_bonus"
+            }
+
+            "States"
+            {
+                "MODIFIER_STATE_MAGIC_IMMUNE"        "MODIFIER_STATE_VALUE_ENABLED"
+            }
+        }
+    }
+}

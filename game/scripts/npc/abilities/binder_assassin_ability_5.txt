@@ -1,0 +1,117 @@
+// Rewrite of the Vengeful Spirit Magic Missile ability
+// Author: Pizzalol
+// Date: 26.01.2015.
+// Game version: 6.84
+"binder_assassin_ability_5"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+    "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+    "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+    "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"   
+    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+    "FightRecapLevel"               "1"
+    "AbilityTextureName"            "phoenix_launch_fire_spirit"
+    "MaxLevel"						"1"
+    "RequiredLevel"          		"15"
+
+    // Precache
+    //-------------------------------------------------------------------------------------------------------------
+    "precache"
+    {
+        "soundfile"         "soundevents/game_sounds_heroes/game_sounds_vengefulspirit.vsndevts"
+        "particle"          "particles/units/heroes/hero_vengeful/vengeful_magic_missle.vpcf"       
+    }
+
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"              "100"
+    "AbilityCastPoint"              "0.3"
+    
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "50.0"
+
+    // Damage.
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityDamage"                 "8000"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "500"
+
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "magic_missile_speed"   "5250"
+        }
+        "02"
+        {
+            "var_type"              "FIELD_FLOAT"
+            "magic_missile_stun"    "10.0"
+        }
+    }
+
+    "OnSpellStart"
+    {
+        "FireSound"
+        {
+            "EffectName"    "Hero_VengefulSpirit.MagicMissile"
+            "Target"        "CASTER"
+        }
+        
+        "TrackingProjectile"
+        {
+            "Target"            "TARGET"
+            "EffectName"        "particles/units/heroes/hero_vengeful/vengeful_magic_missle.vpcf"
+            "Dodgeable"         "1"
+            "ProvidesVision"    "0"
+            "MoveSpeed"         "%magic_missile_speed"
+            "SourceAttachment"  "DOTA_PROJECTILE_ATTACHMENT_ATTACK_1"
+        }    
+        "FireEffect"
+        {
+            "EffectName"    "particles/units/heroes/hero_lina/lina_spell_light_strike_array.vpcf"
+            "EffectAttachType"  "start_at_customorigin"
+            "TargetPoint"       "POINT"
+
+            "ControlPoints"
+            {
+                "00"    "POINT"
+                "01"    "500 0 0"
+                "03"    "0 0 0"
+            }
+        }   
+    }
+
+    "OnProjectileHitUnit"
+    {
+        "DeleteOnHit"   "1"
+        "FireSound"
+        {
+            "EffectName"    "Hero_VengefulSpirit.MagicMissileImpact"
+            "Target"        "TARGET"
+        }
+        
+        "Stun"
+        {
+            "Duration"   "%magic_missile_stun"
+            "Target"     "TARGET"
+        }
+
+        "Damage"
+        {
+            "Target"        "TARGET"
+            "Type"          "DAMAGE_TYPE_MAGICAL"
+            "Damage"        "%AbilityDamage"
+        }                       
+    }   
+}
+

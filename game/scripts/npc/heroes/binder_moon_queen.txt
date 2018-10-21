@@ -1,0 +1,53 @@
+"binder_moon_queen"
+    {
+    	
+	// General
+	//-------------------------------------------------------------------------------------------------------------
+	"override_hero"				"npc_dota_hero_phantom_moon_queen"
+
+	// Abilities
+	//-------------------------------------------------------------------------------------------------------------
+	"AbilityLayout"			"5"
+	"Ability1"				"binder_moon_queen_ability_1"					// Ability 1
+	"Ability2"				"binder_moon_queen_ability_2"					// Ability 2
+	"Ability3"				"binder_moon_queen_ability_3"					// Ability 3
+	"Ability4"				"binder_moon_queen_ability_4"					// Ability 4
+	"Ability5"				"binder_moon_queen_ability_5"					// Ability 5
+	"Ability6"				""											// Ability 6
+	"Ability7"				""											// Ability 7
+	"Ability8"				""											// Ability 8
+	"Ability9"				""											// Ability 9
+	"Ability10"				""											// Ability 10
+	"Ability11"				""											// Ability 11
+	"Ability12"				""											// Ability 12
+	"Ability13"				""											// Ability 13
+	"Ability14"				""											// Ability 14
+	"Ability15"				""											// Ability 15
+	"Ability16"				""											// Ability 16
+	 
+	// Armor
+	//-------------------------------------------------------------------------------------------------------------
+	"ArmorPhysical"			"15"										// Physical protection.
+
+	// Attack
+	//-------------------------------------------------------------------------------------------------------------
+	"AttackDamageMin"			"2"										// Damage range min.
+	"AttackDamageMax"			"24"									// Damage range max.
+	"AttackRate"				"1.77"									// Speed of attack.
+
+	// Attributes
+	//-------------------------------------------------------------------------------------------------------------
+	"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
+	"AttributeBaseStrength"		"18"									// Base strength
+	"AttributeStrengthGain"		"2"										// Strength bonus per level.
+	"AttributeBaseIntelligence"	"16"									// Base intelligence
+	"AttributeIntelligenceGain"	"3"										// Intelligence bonus per level.
+	"AttributeBaseAgility"		"23"									// Base agility
+	"AttributeAgilityGain"		"3"										// Agility bonus per level.
+
+	// Movement
+	//-------------------------------------------------------------------------------------------------------------
+	"MovementSpeed"				"300"									// Speed.
+	"MovementTurnRate"			"1"										// Turning rate.
+	"HasAggressiveStance"		"1"  
+}	

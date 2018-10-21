@@ -1,0 +1,156 @@
+"binder_warlock_ability_1"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+    "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+    "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+    "AbilityUnitTargetFlags"        "DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE"
+    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+    "FightRecapLevel"               "2"
+    "AbilityTextureName"            "lion_mana_drain"
+    "MaxLevel"						"5"
+    "RequiredLevel"          		"1"
+    "LevelsBetweenUpgrades"  		"2"
+// Precache
+    //-------------------------------------------------------------------------------------------------------------
+    "precache"
+    {
+        "soundfile"         "soundevents/game_sounds_heroes/game_sounds_lion.vsndevts"
+        "particle"          "particles/units/heroes/hero_lion/lion_spell_mana_drain.vpcf"
+    }
+    
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastRange"              "600"
+    "AbilityCastPoint"              "0.3 0.3 0.3 0.3"
+    "AbilityChannelTime"                "5.1"
+
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "6.0"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "10 10 10 10 10 10"
+    
+    // Stats
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityModifierSupportValue"   "5.0"   // better then the mana cost implies
+
+    // Special
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"                  "FIELD_FLOAT"
+            "duration"                  "6.0"
+        }
+        "02"
+        {
+            "var_type"                  "FIELD_INTEGER"
+            "mana_per_second"           "20 40 60 80 100"
+        }
+        "03"
+        {
+            "var_type"                  "FIELD_INTEGER"
+            "break_distance"            "1200"
+        }
+        "04"
+        {
+            "var_type"                  "FIELD_FLOAT"
+            "illusion_kill_time"        "0.25"
+        }
+        "05"
+        {
+            "var_type"                  "FIELD_FLOAT"
+            "tick_interval"             "0.25"
+        }
+    }
+
+    "OnSpellStart"
+    {
+        "FireSound"
+        {
+            "EffectName"    "Hero_Lion.ManaDrain"
+            "Target"        "TARGET"
+        }
+
+        "ApplyModifier"
+        {
+            "ModifierName"      "modifier_mana_drain_datadriven"
+            "Target"            "TARGET"
+        }
+    }
+
+    "OnChannelInterrupted"
+    {
+        "RunScript"
+        {
+            "ScriptFile"    "abilities/heroes/binder_warlock/binder_warlock_ability_1.lua"
+            "Function"      "mana_drain_stop_sound"
+            "sound"         "Hero_Lion.ManaDrain"
+        }
+
+        "RemoveModifier"
+        {
+            "ModifierName"      "modifier_mana_drain_datadriven"
+            "Target"            "TARGET"
+        }
+    }
+
+    "OnChannelFinish"
+    {
+        "RunScript"
+        {
+            "ScriptFile"    "abilities/heroes/binder_warlock/binder_warlock_ability_1.lua"
+            "Function"      "mana_drain_stop_sound"
+            "sound"         "Hero_Lion.ManaDrain"
+        }
+
+        "RemoveModifier"
+        {
+            "ModifierName"      "modifier_mana_drain_datadriven"
+            "Target"            "TARGET"
+        }
+    }
+
+    "Modifiers"
+    {
+        "modifier_mana_drain_datadriven"
+        {
+            "IsDebuff"  "1"
+            "Duration"  "%duration"
+
+            "OnCreated"
+            {
+                "AttachEffect"
+                {
+                    "EffectName"    "particles/units/heroes/hero_lion/lion_spell_mana_drain.vpcf"
+                    "EffectAttachType"  "start_at_customorigin"
+                    "Target"        "TARGET"
+
+                    "ControlPointEntities"
+                    {
+                        "TARGET"    "attach_hitloc"
+                        "CASTER"    "attach_hitloc"
+                    }
+                }
+            }
+
+            "ThinkInterval" "%tick_interval"
+
+            "OnIntervalThink"
+            {
+                "RunScript"
+                {
+                    "ScriptFile"    "abilities/heroes/binder_warlock/binder_warlock_ability_1.lua"
+                    "Function"      "mana_drain"
+                }
+            }
+        }
+    }
+}
+

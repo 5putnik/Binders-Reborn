@@ -1,0 +1,120 @@
+"binder_warlock_ability_3"
+    {
+    
+        "precache"
+        {
+            "soundfile"             "soundevents/game_sounds_heroes/game_sounds_bane.vsndevts"
+            "particle"              "particles/units/heroes/hero_legion/legion_spell_overwhelming_odds.vpcf"
+        }
+        
+        // General
+        //-------------------------------------------------------------------------------------------------------------
+        "BaseClass"                             "ability_datadriven"
+        "AbilityTextureName"            "doom_bringer_scorched_earth"
+        "MaxLevel"                      "5"
+        "RequiredLevel"                 "1"
+        "LevelsBetweenUpgrades"         "2"
+        "AbilityBehavior"                       "DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
+        "AbilityUnitTargetTeam"                 "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitDamageType"                 "DAMAGE_TYPE_MAGICAL"
+        "AbilityUnitTargetType"                 "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "MaxLevel"                      "10"
+        
+
+        // Casting
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilityCastRange"                      "500"
+        "AbilityCastPoint"                      ".2"
+
+        // Time        
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilityCooldown"                               "16 15.5 15 14.5 14 13.5 13 12.5 12 11.5"
+       
+        // Cost
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilityManaCost"                               "60 65 70 75 80 85 90 95 100 105"
+        "AOERadius"                     "%radius"
+
+        "OnSpellStart"
+        {       
+            "CreateThinker"
+            {
+                "ModifierName"          "iciclerain_thinker"
+                "Target"                "POINT"
+            }
+            "RunScript"
+            {
+                "ScriptFile"        "abilities/heroes/binder_warlock/binder_warlock_ability_3.lua"
+                "Function"          "Particle"
+                "duration"          "%duration"
+                "Target"            "POINT"
+            }
+        }
+        
+        "Modifiers"
+        {           
+            "iciclerain_thinker"
+            {
+                "Aura"                  "iciclerain_aura"
+                "Aura_Radius"           "%radius"
+                "Aura_Teams"            "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                "Aura_Types"            "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP"
+                "Duration"              "%duration"
+                "ThinkInterval"         "1"
+                //"OnIntervalThink"
+                //{
+                //  "RunScript"
+                //  {
+                //      "ScriptFile"        "sounds.lua"
+                //      "Function"          "Icicle"
+                //      "Target"            "POINT"
+                //  }
+                //}
+            }
+            
+            "iciclerain_aura"
+            {
+                "IsDebuff"      "1"
+                "IsPurgable"    "0"
+                "EffectName"    "particles/items2_fx/heavens_halberd_debuff_core.vpcf"
+                "EffectAttachType" "follow_overhead"
+                "ThinkInterval"         "1.0"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"        "abilities/heroes/binder_warlock/binder_warlock_ability_3.lua"
+                        "Function"          "Damage"
+                        "damage"            "%damageintperc"
+                    }
+                }
+            }
+        }
+       
+        // Special     
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "radius"                "200"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "duration"              "4.0"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "tick_interval"         ".1"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                //"damageintperc"           "5 7.5 10 12.5"
+                "damageintperc"         "7.75 8 8.25 8.5 8.75 9 9.25 9.5 9.75 10"
+            }
+        }
+    }

@@ -1,0 +1,240 @@
+// Rewrite of the Bristleback Quill Spray ability
+// Author: Ragnar Homsar
+// Date: November 28, 2015
+// Version: 6.85
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_bristleback/quill_spray.lua
+"binder_assassin_ability_3"
+{
+	// General
+	//-------------------------------------------------------------------------------------------------------------
+	"BaseClass"				"ability_datadriven"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+	"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+	"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+	"FightRecapLevel"				"1"
+	"AbilityTextureName"			"legion_commander_overwhelming_odds"
+    "MaxLevel"						"5"
+    "RequiredLevel"          		"1"
+    "LevelsBetweenUpgrades"  		"2"
+	
+	// Casting
+	//-------------------------------------------------------------------------------------------------------------
+	"AbilityCastRange"				"625"
+	"AbilityCastPoint"				"0.0 0.0 0.0 0.0 0.0"
+		
+	// Time		
+	//-------------------------------------------------------------------------------------------------------------
+	"AbilityCooldown"				"9.0 9.0 9.0 9.0 9.0"
+	
+	// Cost
+	//-------------------------------------------------------------------------------------------------------------
+	"AbilityManaCost"				"100 100 100 100 100"
+	
+	// Special
+	//-------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"radius"				"400 450 500 550 600"
+		}
+		"02"
+		{
+			"var_type"				"FIELD_FLOAT"
+			"quill_base_damage"		"75 225 400 600 825"
+		}
+		"03"
+		{
+			"var_type"				"FIELD_FLOAT"
+			"quill_stack_damage"	"0.0 0.0 0.0 0.0"
+		}
+		"04"
+		{
+			"var_type"				"FIELD_FLOAT"
+			"quill_stack_duration"	"0.1"
+		}
+		"05"
+		{
+			"var_type"				"FIELD_FLOAT"
+			"max_damage"			"900.0"
+		}
+	}
+
+	"precache"
+	{
+		"particle"	"particles/units/heroes/hero_bristleback/bristleback_quill_spray.vpcf"
+		"particle"	"particles/units/heroes/hero_bristleback/bristleback_quill_spray_impact.vpcf"
+		"particle"	"particles/units/heroes/hero_bristleback/bristleback_quill_spray_hit.vpcf"
+		"particle"	"particles/units/heroes/hero_bristleback/bristleback_quill_spray_hit_creep.vpcf"
+		"soundfile"	"soundevents/game_sounds_heroes/game_sounds_bristleback.vsndevts"
+	}
+
+	"OnSpellStart"
+	{
+		"ApplyModifier"
+		{
+			"Target"
+			{
+				"Center"	"CASTER"
+				"Radius"	"%radius"
+				"Teams"		"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Types"		"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+			}
+
+			"ModifierName"	"modifier_quill_spray_datadriven_determiner"
+		}
+
+		"FireEffect"
+		{
+			"EffectName"		"particles/units/heroes/hero_bristleback/bristleback_quill_spray.vpcf"
+			"EffectAttachType"	"attach_hitloc"
+			"EffectRadius"		"%radius"
+			"Target"			"CASTER"
+		}
+
+		"FireSound"
+		{
+			"EffectName"		"Hero_Bristleback.QuillSpray.Cast"
+			"Target"			"CASTER"
+		}
+
+		"FireSound"
+		{
+			"EffectName"		"Hero_Bristleback.QuillSpray.Target"
+			"Target"
+			{
+				"Center"	"CASTER"
+				"Radius"	"%radius"
+				"Teams"		"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Types"		"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+			}
+		}
+	}
+
+	"Modifiers"
+	{
+		"modifier_quill_spray_datadriven_user_display"
+		{
+			"IsDebuff"	"1"
+		}
+
+		"modifier_quill_spray_datadriven_stack_creep" // with thanks to BMD for explaining MODIFIER_ATTRIBUTE_MULTIPLE and telling me a good way to handle this
+		{
+			"IsHidden"		"1"
+			"Attributes"	"MODIFIER_ATTRIBUTE_MULTIPLE"
+			"Duration"		"%quill_stack_duration"
+
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"		"abilities/heroes/binder_assassin/binder_assassin_ability_3.lua"
+					"Function"			"stack_created"
+					"stack_duration"	"%quill_stack_duration"
+					"base_damage"		"%quill_base_damage"
+					"stack_damage"		"%quill_stack_damage"
+					"max_damage"		"%max_damage"
+				}
+
+				"FireEffect"
+				{
+					"EffectName"		"particles/units/heroes/hero_bristleback/bristleback_quill_spray_impact.vpcf"
+					"EffectAttachType"	"follow_hitloc"
+					"Target"			"TARGET"
+				}
+
+				"AttachEffect"
+				{
+					"EffectName"		"particles/units/heroes/hero_bristleback/bristleback_quill_spray_hit_creep.vpcf"
+					"EffectAttachType"	"follow_hitloc"
+					"Target"			"TARGET"
+					"ControlPointEntities"
+					{
+						"TARGET"		"attach_hitloc"
+						"TARGET"		"attach_hitloc"
+						"TARGET"		"attach_hitloc"
+					}
+				}
+			}
+
+			"OnDestroy"
+			{
+				"RunScript"
+				{
+					"ScriptFile"	"abilities/heroes/binder_assassin/binder_assassin_ability_3.lua"
+					"Function"		"stack_destroyed"
+				}
+			}
+		}
+
+		"modifier_quill_spray_datadriven_stack_hero"
+		{
+			"IsHidden"		"1"
+			"Attributes"	"MODIFIER_ATTRIBUTE_MULTIPLE"
+			"Duration"		"%quill_stack_duration"
+
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"		"abilities/heroes/binder_assassin/binder_assassin_ability_3.lua"
+					"Function"			"stack_created"
+					"stack_duration"	"%quill_stack_duration"
+					"base_damage"		"%quill_base_damage"
+					"stack_damage"		"%quill_stack_damage"
+					"max_damage"		"%max_damage"
+				}
+
+				"FireEffect"
+				{
+					"EffectName"		"particles/units/heroes/hero_bristleback/bristleback_quill_spray_impact.vpcf"
+					"EffectAttachType"	"follow_hitloc"
+					"Target"			"TARGET"
+				}
+
+				"AttachEffect"
+				{
+					"EffectName"		"particles/units/heroes/hero_bristleback/bristleback_quill_spray_hit.vpcf"
+					"EffectAttachType"	"follow_hitloc"
+					"Target"			"TARGET"
+					"ControlPointEntities"
+					{
+						"TARGET"		"attach_hitloc"
+						"TARGET"		"attach_hitloc"
+						"TARGET"		"attach_hitloc"
+						"TARGET"		"attach_hitloc"
+					}
+				}
+			}
+
+			"OnDestroy"
+			{
+				"RunScript"
+				{
+					"ScriptFile"	"abilities/heroes/binder_assassin/binder_assassin_ability_3.lua"
+					"Function"		"stack_destroyed"
+				}
+			}
+		}
+
+		"modifier_quill_spray_datadriven_determiner"
+		{
+			"IsHidden"		"1"
+			"Duration"		"0.01"
+
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"	"abilities/heroes/binder_assassin/binder_assassin_ability_3.lua"
+					"Function"		"determine_debuff"
+				}
+			}
+		}
+	}
+}

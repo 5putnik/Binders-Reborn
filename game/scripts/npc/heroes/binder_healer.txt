@@ -1,0 +1,61 @@
+"binder_healer"
+    {
+    	
+	// General
+	//-------------------------------------------------------------------------------------------------------------
+	"override_hero"				"npc_dota_hero_crystal_maiden"
+	"Role"						"Support,Disabler,Nuker" 
+	"Rolelevels"				"3,1,1"
+
+	// Abilities
+	//-------------------------------------------------------------------------------------------------------------
+	"AbilityLayout"			"5"
+	"Ability1"				"binder_healer_ability_1"					// Ability 1
+	"Ability2"				"binder_healer_ability_2"					// Ability 2
+	"Ability3"				"binder_healer_ability_3"					// Ability 3
+	"Ability4"				"binder_healer_ability_4"					// Ability 4
+	"Ability5"				"binder_healer_ability_5"					// Ability 5
+	"Ability6"				""											// Ability 6
+	"Ability7"				""											// Ability 7
+	"Ability8"				""											// Ability 8
+	"Ability9"				""											// Ability 9
+	"Ability10"				""											// Ability 10
+	"Ability11"				""											// Ability 11
+	"Ability12"				""											// Ability 12
+	"Ability13"				""											// Ability 13
+	"Ability14"				""											// Ability 14
+	"Ability15"				""											// Ability 15
+	"Ability16"				""											// Ability 16
+	 
+	// Armor
+	//-------------------------------------------------------------------------------------------------------------
+	"ArmorPhysical"			"15"										// Physical protection.
+
+	// Attack
+	//-------------------------------------------------------------------------------------------------------------
+	"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+	"AttackDamageMin"			"2"										// Damage range min.
+	"AttackDamageMax"			"8"										// Damage range max.
+	"AttackRate"				"1"										// Speed of attack.
+	"AttackAnimationPoint"		"0.55"									// Normalized time in animation cycle to attack.
+	"AttackAcquisitionRange"	"800"									// Range within a target can be acquired.
+	"AttackRange"				"600"									// Range within a target can be attacked.
+	"ProjectileModel"			"maiden_base_attack"					// Particle system model for projectile.
+	"ProjectileSpeed"			"900"									// Speed of projectile.
+
+	// Attributes
+	//-------------------------------------------------------------------------------------------------------------
+	"AttributePrimary"			"DOTA_ATTRIBUTE_INTELLECT"
+	"AttributeBaseStrength"		"15"									// Base strength
+	"AttributeStrengthGain"		"2"										// Strength bonus per level.
+	"AttributeBaseIntelligence"	"17"									// Base intelligence
+	"AttributeIntelligenceGain"	"4"										// Intelligence bonus per level.
+	"AttributeBaseAgility"		"19"									// Base agility
+	"AttributeAgilityGain"		"2"										// Agility bonus per level.
+
+	// Movement
+	//-------------------------------------------------------------------------------------------------------------
+	"MovementSpeed"				"280"									// Speed.
+	"MovementTurnRate"			"1"										// Turning rate.
+	"HasAggressiveStance"		"1"  
+}	

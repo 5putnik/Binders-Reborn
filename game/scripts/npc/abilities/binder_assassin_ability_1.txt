@@ -1,0 +1,133 @@
+"binder_assassin_ability_1"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_CHANNEL"
+    "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"
+    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+    "FightRecapLevel"               "2"
+    "AbilityTextureName"            "bounty_hunter_wind_walk"
+    "MaxLevel"						"5"
+    "RequiredLevel"          		"1"
+    "LevelsBetweenUpgrades"  		"2"
+
+    // Stats        
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "5.0 5.0 5.0 5.0 5.0"
+
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "75 75 75 75 75"
+    
+    // Special  
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        
+        "01"
+        {
+            "var_type"              "FIELD_FLOAT"
+            "duration"              "20.0 35.0 50.0 80.0 100.0"
+        }
+        "02"
+        {
+            "var_type"              "FIELD_FLOAT"
+            "fade_time"             "0.0"
+        }
+        "03"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "movement_speed"        "10 40 70 100 100"
+        }
+        "04"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "bonus_damage"          "40 125 200 275 350"
+        }
+    }
+    
+    // Data driven
+    //-------------------------------------------------------------------------------------------------------------
+    "precache"
+    {
+        "soundfile"                     "soundevents/game_sounds_heroes/game_sounds_nyx_assassin.vsndevts"
+        "particle"                      "particles/status_fx/status_effect_base.vpcf"
+        "particle"                      "particles/units/heroes/hero_nyx_assassin/nyx_assassin_vendetta_start.vpcf"
+    }
+    
+    "OnSpellStart"
+    {
+        "DelayedAction"
+        {
+            "Delay"                     "%fade_time"
+            "Action"
+            {
+                "FireSound"
+                {
+                    "Target"                "CASTER"
+                    "EffectName"            "Hero_NyxAssassin.Vendetta"
+                }
+            
+                "ApplyModifier"
+                {
+                    "Target"                "CASTER"
+                    "ModifierName"          "modifier_vendetta_buff_datadriven"
+                }
+                
+                "ApplyModifier"
+                {
+                    "Target"                "CASTER"
+                    "ModifierName"          "modifier_invisible"
+                    "Duration"              "%duration"
+                }
+            }
+        }
+    }
+    
+    "Modifiers"
+    {
+        "modifier_vendetta_buff_datadriven"
+        {
+            "Duration"                  "%duration"
+        
+            "OnCreated"
+            {
+                "AttachEffect"
+                {
+                    "Target"            "TARGET"
+                    "EffectName"        "particles/units/heroes/hero_nyx_assassin/nyx_assassin_vendetta_start.vpcf"
+                    "EffectAttachType"  "start_at_origin"
+                }
+            }
+        
+            "OnAttack"
+            {
+                "RunScript"
+                {
+                    "ScriptFile"    "abilities/heroes/binder_assassin/binder_assassin_ability_1.lua"
+                    "Function"      "vendetta_attack"
+                }
+            }
+
+            "OnAbilityExecuted"
+            {
+                "RunScript"
+                {
+                    "ScriptFile"    "abilities/heroes/binder_assassin/binder_assassin_ability_1.lua"
+                    "Function"      "vendetta_cancel"
+                }
+            }
+        
+            "Properties"
+            {
+                "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"  "%movement_speed"
+            }
+        
+            "States"
+            {
+                "MODIFIER_STATE_NO_UNIT_COLLISION"      "MODIFIER_STATE_VALUE_ENABLED"
+            }
+        }
+    }
+}

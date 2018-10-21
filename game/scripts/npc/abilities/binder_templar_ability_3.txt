@@ -1,0 +1,135 @@
+// Rewrite of Smoke Screen
+// Author: YOLOSPAGHETTI
+// Date: February 4, 2016
+// Version: 6.86
+// Type: Datadriven
+"binder_templar_ability_3"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
+    "AbilityTextureName"            "riki_smoke_screen"
+    "AOERadius"                     "%radius"
+    "MaxLevel"                      "5"
+    "RequiredLevel"                 "1"
+    "LevelsBetweenUpgrades"         "2"
+
+    // Casting
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCastPoint"              "0.4"
+    "AbilityCastRange"              "1000"
+
+    // Time     
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityCooldown"               "20.0"
+    
+    // Cost
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilityManaCost"               "100"
+    
+    // Special  
+    //-------------------------------------------------------------------------------------------------------------
+    "AbilitySpecial"
+    {
+        "01"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "radius"                "250 350 450 550 650"
+        }
+        "02"
+        {
+            "var_type"              "FIELD_FLOAT"
+            "duration"              "30.0"
+        }
+        "02"
+        {
+            "var_type"              "FIELD_FLOAT"
+            "linger_duration"       "0.5"
+        }
+        "03"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "move_slow"             "-20 -50 -85 -125 -170"
+        }
+        "04"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "miss_chance"           "15 30 45 60 75"
+        }
+        "05"
+        {
+            "var_type"              "FIELD_INTEGER"
+            "attack_slow"           "-20 -50 -85 -125 -170"
+        }
+    }
+
+    "precache"
+    {
+        "soundfile" "sounds/weapons/hero/riki/riki_smokescreen.vsnd"
+        "particle"  "particles/units/heroes/hero_riki/riki_smokebomb.vpcf"
+        "particle"  "particles/units/heroes/hero_riki/riki_smokebomb_b.vpcf"
+    }
+
+    "OnSpellStart"
+    {
+        "CreateThinker"
+        {
+            "ModifierName"  "modifier_smoke_screen"
+            "Target"        "POINT"
+        }
+    } 
+
+    "Modifiers"
+    {
+        "modifier_smoke_screen"
+        {
+            "Aura"                  "modifier_smoke_screen_debuff"
+            "Aura_Radius"           "%radius"
+            "Aura_Teams"            "DOTA_UNIT_TARGET_TEAM_ENEMY"
+            "Aura_Types"            "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_MECHANICAL"
+            "Duration"              "%duration"
+
+            "OnCreated"
+            {
+                "FireSound"
+                {
+                    //fix sound!
+                    "EffectName"    "Hero_Riki.Smoke_Screen"
+                    "Target"        "CASTER"
+                }
+
+                "AttachEffect"
+                {
+                    "EffectName"        "particles/units/heroes/hero_riki/riki_smokebomb.vpcf"
+                    "EffectAttachType"  "follow_origin"
+                    "Target"            "TARGET"
+                    "ControlPoints"
+                    {
+                        "00" "0 0 0"
+                        "01" "%radius %radius %radius"
+                    }
+                }
+            }
+        }
+
+        "modifier_smoke_screen_debuff"
+        {
+            "IsDebuff"      "1"
+            "EffectName"    "particles/generic_gameplay/generic_silence.vpcf"
+            "EffectAttachType"  "follow_overhead"
+            "Duration"          "%linger_duration"
+            
+            "Properties"
+            {
+                "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"  "%move_slow"
+                "MODIFIER_PROPERTY_MISS_PERCENTAGE"             "%miss_chance"
+                "MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT"  "%attack_slow"
+            }
+            "States"
+            {
+                "MODIFIER_STATE_SILENCED"       "MODIFIER_STATE_VALUE_DISABLED"
+            }
+        }
+    }
+}
